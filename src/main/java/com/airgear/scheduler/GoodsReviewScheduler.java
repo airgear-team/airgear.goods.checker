@@ -1,38 +1,37 @@
 package com.airgear.scheduler;
 
 import com.airgear.dto.CheckResult;
+import com.airgear.model.Goods;
 import com.airgear.model.GoodsVerificationStatus;
-import com.airgear.model.SimpleGoods;
 import com.airgear.service.ContentCheckerService;
-import com.airgear.service.SimpleGoodsService;
+import com.airgear.service.GoodsService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@AllArgsConstructor
 public class GoodsReviewScheduler {
 
     private static final int TIME_INTERVAL = 60000;
-    @Autowired
-    private SimpleGoodsService goodsService;
 
-    @Autowired
-    ContentCheckerService contentCheckerService;
+    private GoodsService goodsService;
+
+    private ContentCheckerService contentCheckerService;
 
     @Scheduled(fixedRate = TIME_INTERVAL)
     public void reviewGoods() {
         int page = 0;
         int size = 100;
-        List<SimpleGoods> goodsList;
+        List<Goods> goodsList;
 
         do {
             goodsList = goodsService.getGoodsForReview(page, size);
 
-            for (SimpleGoods goods : goodsList) {
+            for (Goods goods : goodsList) {
                 String contentToCheck = goods.getName() + " " + goods.getDescription();
-                System.out.println("Checking content: " + contentToCheck); // TODO: remove this line
                 CheckResult checkResult = contentCheckerService.checkContent(contentToCheck);
 
                 if (checkResult.isClean()) {

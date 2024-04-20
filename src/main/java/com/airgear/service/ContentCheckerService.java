@@ -1,9 +1,10 @@
 package com.airgear.service;
 
 import com.airgear.dto.CheckResult;
-import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
